@@ -53,6 +53,7 @@ def register():
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
+        email = request.form["email"]
         db = get_db()
         error = None
 
@@ -61,11 +62,14 @@ def register():
         elif not password:
             error = "Se requiere contraseña."
 
+        elif not email:
+            error = "ingresar email."
+
         if error is None:
             try:
                 db.execute(
-                    "INSERT INTO user (username, password) VALUES (?, ?)",
-                    (username, generate_password_hash(password)),
+                    "INSERT INTO user (username, password, email) VALUES (?,?, ?)",
+                    (username, generate_password_hash(password),email),
                 )
                 db.commit()
             except db.IntegrityError:
@@ -97,6 +101,8 @@ def login():
             error = "Usuario incorrecto."
         elif not check_password_hash(user["password"], password):
             error = "Contraseña incorrecta."
+
+        
 
         if error is None:
             # store the user id in a new session and return to the index
