@@ -51,9 +51,11 @@ def test_login(client, auth: AuthActions):
         client.get("/")
         assert session["user_id"] == 1
         assert g.user["username"] == "test"
+
 @pytest.mark.parametrize(
     ("Usuario", "Contaseña", "Mensaje"),
-    (("a", "test", "Usuario incorrecto."), ("test", "a", "Contraseña incorrecta.")),
+    (("a", "test", "Usuario o contraseña incorrecta."), 
+     ("test", "a", "Usuario o contraseña incorrecta.")),
 )
 def test_login_validate_input(auth: AuthActions, username, password, message):
     response = auth.login(username, password)
